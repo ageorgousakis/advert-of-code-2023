@@ -1,4 +1,3 @@
-typealias SchematicRow = List<Element>
 
 fun main() {
     val day = "03"
@@ -9,12 +8,12 @@ fun main() {
     val showTestResult = false
         
     fun part1(input: List<String>): Int =
-        input.toSchematicRows()
+        input.toEngine()
             .findPartNumbers()
             .sumOf { it.value }
 
     fun part2(input: List<String>): Int =
-        input.toSchematicRows()
+        input.toEngine()
             .flatten()
             .findGearParts()
             .sumOf { it.partNumber1 * it.partNumber2 }
@@ -56,32 +55,17 @@ data class Symbol(val value: Char, val column: Int, val row: Int) : Element() {
 
 data class Gear(val partNumber1: Int, val partNumber2: Int)
 
-fun lineToElements(line: String, row: Int) = buildList {
-    var numberBuilder = ""
-    var numberStartColumn = -1
-    line.forEachIndexed { column,  c ->
-        if (c.isDigit()) {
-            numberBuilder += c
-            if (numberStartColumn == -1) numberStartColumn = column
-        } else {
-            if (c != '.') this.add(Symbol(c, column, row))
-            if (numberBuilder.isNotEmpty()) {
-                this.add(Number(numberBuilder.toInt(), row, numberStartColumn, column -1))
-                numberBuilder = ""
-                numberStartColumn = -1
-            }
-        }
-    }
-}
+typealias Elements = List<Element>
+typealias Engine = List<Elements>
 
-fun List<SchematicRow>.findPartNumbers() =
+fun Engine.findPartNumbers() =
     this.windowed(2).flatMap { rows ->
         val symbols = rows.flatten().filterIsInstance<Symbol>()
         rows.flatten().filterIsInstance<Number>()
             .filter { n-> symbols.any { s -> s.isInNumberBounds(n) } }
     }.toSet()
 
-fun List<Element>.findGearParts(): List<Gear> {
+fun Elements.findGearParts(): List<Gear> {
     val parts = this.filterIsInstance<Number>()
     return this.filterIsInstance<Symbol>().filter { it.isGear }.map { s ->
         parts.filter { s.isInNumberBounds(it) }
@@ -90,4 +74,22 @@ fun List<Element>.findGearParts(): List<Gear> {
     }
 }
 
-fun List<String>.toSchematicRows(): List<SchematicRow> = mapIndexed { row, line -> lineToElements("$line.", row) }
+fun List<String>.toEngine(): Engine = mapIndexed { row, line ->
+    buildList {
+        var numberBuilder = ""
+        var numberStartColumn = -1
+        "$line.".forEachIndexed { column, c ->
+            if (c.isDigit()) {
+                numberBuilder += c
+                if (numberStartColumn == -1) numberStartColumn = column
+            } else {
+                if (c != '.') add(Symbol(c, column, row))
+                if (numberBuilder.isNotEmpty()) {
+                    add(Number(numberBuilder.toInt(), row, numberStartColumn, column - 1))
+                    numberBuilder = ""
+                    numberStartColumn = -1
+                }
+            }
+        }
+    }
+}
