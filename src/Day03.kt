@@ -66,8 +66,8 @@ fun Engine.findPartNumbers() =
     }.toSet()
 
 fun Elements.findGearParts(): List<Gear> {
-    val parts = this.filterIsInstance<Number>()
-    return this.filterIsInstance<Symbol>().filter { it.isGear }.map { s ->
+    val parts = filterIsInstance<Number>()
+    return filterIsInstance<Symbol>().filter { it.isGear }.map { s ->
         parts.filter { s.isInNumberBounds(it) }
     }.filter { it.size == 2 }.map {
         Gear(it[0].value, it[1].value)
