@@ -18,20 +18,20 @@ fun main() {
     val testInput = readInput("Day${day}_test")
     part1(testInput).also {
         if (showTestResult) it.println()
-        check(it == testPart1Result)
+        check(it == testPart1Result)  { "$it <> $testPart1Result" }
     }
     part2(testInput).also {
         if (showTestResult) it.println()
-        check(it == testPart2Result)
+        check(it == testPart2Result)  { "$it <> $testPart2Result" }
     }
     
     val input = readInput("Day$day")
     part1(input).also {
         it.println()
-        check(it == part1Result)
+        check(it == part1Result)  { "$it <> $part1Result" }
     }
     part2(input).also {
         it.println()
-        check(it == part2Result)
+        check(it == part2Result)  { "$it <> $part2Result" }
     }
 }
