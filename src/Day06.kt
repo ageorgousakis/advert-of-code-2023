@@ -1,9 +1,9 @@
 fun main() {
     val day = "06"
     val testPart1Result = 288
-    val testPart2Result = 71503
+    val testPart2Result: Long = 71503
     val part1Result = 3316275
-    val part2Result = 27102791
+    val part2Result: Long = 27102791
     val showTestResult = false
 
     val spacesSplitter = "\\s+".toRegex()
@@ -16,18 +16,23 @@ fun main() {
         }
         return races.map { (time, distance) ->
 //            println("Race $time / $distance")
-            (1..<time).map { speed ->
-                (time - speed) * speed
-            }.count { it > distance }
+            val from = (1..<time).first { speed ->
+                (time - speed) * speed > distance
+            }
+            time - (from * 2) + 1
         }.fold(1) { acc, count -> acc * count }
     }
 
-    fun part2(input: List<String>): Int {
+    fun part2(input: List<String>): Long {
         val time = input[0].substringAfter(":").filterNot { it.isWhitespace() }.toLong()
         val distance = input[1].substringAfter(":").filterNot { it.isWhitespace() }.toLong()
-        return (1..<time).map { speed ->
-            (time - speed) * speed
-        }.count { it > distance }
+//        return (1..<time).map { speed ->
+//            (time - speed) * speed
+//        }.count { it > distance }
+        val from = (1..<time).first { speed ->
+            (time - speed) * speed > distance
+        }
+        return time - (from * 2) + 1
     }
 
     // test if implementation meets criteria from the description, like:
