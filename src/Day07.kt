@@ -19,13 +19,16 @@ fun main() {
     }.values.sorted().reversed().joinToString("").padEnd(5) + hand
 
     fun part1(input: List<String>): Long {
-        val original_marks = "AKQJT98765432"
-        val ordered_marks = "EDCBA98765432"
-        return input.map {
-            val (hand, bid) = it.split(' ')
-            val orderedHand = hand.map {
-                ordered_marks[original_marks.indexOf(it)]
-            }.joinToString("")
+        val map = mapOf(
+            'A' to 'E',
+            'K' to 'D',
+            'Q' to 'C',
+            'J' to 'B',
+            'T' to 'A',
+        ) + (9 downTo 2).map { it.digitToChar() to it.digitToChar() }
+        return input.map { line ->
+            val (hand, bid) = line.split(' ')
+            val orderedHand = hand.map { map[it] }.joinToString("")
             scored(orderedHand) to bid.toLong()
         }.sortedWith { a, b ->
             a.first.compareTo(b.first)
@@ -36,13 +39,16 @@ fun main() {
     }
 
     fun part2(input: List<String>): Long {
-        val original_marks = "AKQTJ98765432"
-        val ordered_marks = "DCBA198765432"
-        return input.map {
-            val (hand, bid) = it.split(" ")
-            val orderedHand = hand.map {
-                ordered_marks[original_marks.indexOf(it)]
-            }.joinToString("")
+        val map = mapOf(
+            'A' to 'D',
+            'K' to 'C',
+            'Q' to 'B',
+            'T' to 'A',
+            'J' to '1',
+        ) + (9 downTo 2).map { it.digitToChar() to it.digitToChar() }
+        return input.map { line ->
+            val (hand, bid) = line.split(' ')
+            val orderedHand = hand.map { map[it] }.joinToString("")
             scored(orderedHand) to bid.toLong()
         }.sortedWith { a, b ->
             a.first.compareTo(b.first)
