@@ -6,16 +6,17 @@ fun main() {
     val part2Result: Long = 248256639
     val showTestResult = false
 
-    fun scored(hand: String): String = hand.toList().sorted().reversed().fold(emptyMap<Char, Int>()) { acc, c ->
-        if (c == '1') {
-            val highestKeyPair = acc.maxByOrNull { it.value }
-            if (highestKeyPair == null) {
-                acc + (c to (acc.getOrDefault(c, 0) + 1))
+    fun scored(hand: String): String = hand.toList().sorted().reversed().fold(emptyMap<Char, Int>()) { acc, card ->
+        if (card == '1') { // J case
+            val highest = acc.maxByOrNull { it.value }
+            if (highest == null) {
+                acc + (card to (acc.getOrDefault(card, 0) + 1))
             } else {
-                acc + (highestKeyPair.key to highestKeyPair.value + 1)
+                acc + (highest.key to highest.value + 1)
             }
-        } else
-            acc + (c to (acc.getOrDefault(c, 0) + 1))
+        } else {
+            acc + (card to (acc.getOrDefault(card, 0) + 1))
+        }
     }.values.sorted().reversed().joinToString("").padEnd(5) + hand
 
     fun part1(input: List<String>): Long {
