@@ -6,7 +6,7 @@ fun main() {
     val part2Result: Long = 248256639
     val showTestResult = false
 
-    fun scored(hand: String): String = hand.toList().sorted().reversed().fold(emptyMap<Char, Int>()) { acc, card ->
+    fun sortableHand(hand: String): String = hand.toList().sorted().reversed().fold(emptyMap<Char, Int>()) { acc, card ->
         if (card == '1') { // J case
             val highest = acc.maxByOrNull { it.value }
             if (highest == null) {
@@ -19,6 +19,15 @@ fun main() {
         }
     }.values.sorted().reversed().joinToString("").padEnd(5) + hand
 
+    fun parseInput(input: List<String>, map: Map<Char, Char>) =
+        input.map { line ->
+            val (hand, bid) = line.split(' ')
+            val orderedHand = hand.map { map[it] }.joinToString("")
+            sortableHand(orderedHand) to bid.toLong()
+        }.sortedWith { a, b ->
+            a.first.compareTo(b.first)
+        }
+
     fun part1(input: List<String>): Long {
         val map = mapOf(
             'A' to 'E',
@@ -27,17 +36,13 @@ fun main() {
             'J' to 'B',
             'T' to 'A',
         ) + (9 downTo 2).map { it.digitToChar() to it.digitToChar() }
-        return input.map { line ->
-            val (hand, bid) = line.split(' ')
-            val orderedHand = hand.map { map[it] }.joinToString("")
-            scored(orderedHand) to bid.toLong()
-        }.sortedWith { a, b ->
-            a.first.compareTo(b.first)
-        }.mapIndexed { index, handToBid ->
+        return parseInput(input, map)
+            .mapIndexed { index, handToBid ->
 //            println("${handToBid.first} to ${handToBid.second}")
-            handToBid.second * (index + 1)
-        }.sum()
+                handToBid.second * index.inc()
+            }.sum()
     }
+
 
     fun part2(input: List<String>): Long {
         val map = mapOf(
@@ -47,15 +52,11 @@ fun main() {
             'T' to 'A',
             'J' to '1',
         ) + (9 downTo 2).map { it.digitToChar() to it.digitToChar() }
-        return input.map { line ->
-            val (hand, bid) = line.split(' ')
-            val orderedHand = hand.map { map[it] }.joinToString("")
-            scored(orderedHand) to bid.toLong()
-        }.sortedWith { a, b ->
+        return parseInput(input, map).sortedWith { a, b ->
             a.first.compareTo(b.first)
         }.mapIndexed { index, handToBid ->
 //            println("${handToBid.first} to ${handToBid.second}")
-            handToBid.second * (index + 1)
+            handToBid.second * index.inc()
         }.sum()
     }
 
