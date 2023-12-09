@@ -6,18 +6,34 @@ fun main() {
     val part2Result = 1026
     val showTestResult = false
 
-    fun part1(input: List<String>): Int = input.sumOf { line ->
-        val sequences = mutableListOf(line.split(' ').map { it.toInt() })
-        while (sequences.last().any { it != 0 })
-            sequences += sequences.last().windowed(2).map { (a, b) -> b - a }
-        sequences.sumOf { it.last() }
+    fun List<Int>.predictNext(): Int {
+        val sequences = generateSequence(this) { base ->
+            base.zipWithNext().map { (a, b) ->  b - a }
+        }.takeWhile { sequence -> sequence.any { it != 0 } }
+        return sequences.map { it.last() }.sum()
     }
 
-    fun part2(input: List<String>): Int = input.sumOf { line ->
-        val sequences = mutableListOf(line.split(' ').map { it.toInt() })
-        while (sequences.last().any { it != 0 })
-            sequences += sequences.last().windowed(2).map { (a, b) -> b - a }
-        sequences.map { it.first() }.reversed().reduce { acc, i -> i - acc }
+    fun List<Int>.predictPrevious(): Int {
+        val sequences = generateSequence(this) { base ->
+            base.zipWithNext().map { (a, b) ->  b - a }
+        }.takeWhile { sequence -> sequence.any { it != 0 } }
+        return sequences.map { it.first() }.toList().reversed().reduce { acc, i -> i - acc }
+    }
+
+    fun part1(input: List<String>): Int {
+        val histories = input.map { line -> line.split(' ').map { it.toInt() } }
+        return histories.sumOf { it.predictNext() }
+    }
+
+    fun part2(input: List<String>): Int {
+        val histories = input.map { line -> line.split(' ').map { it.toInt() } }
+        return histories.sumOf { it.predictPrevious() }
+//        return input.sumOf { line ->
+//            val sequences = mutableListOf(line.split(' ').map { it.toInt() })
+//            while (sequences.last().any { it != 0 })
+//                sequences += sequences.last().zipWithNext().map { (a, b) -> b - a }
+//            sequences.map { it.first() }.reversed().reduce { acc, i -> i - acc }
+//        }
     }
 
     // test if implementation meets criteria from the description, like:
@@ -41,3 +57,4 @@ fun main() {
         check(it == part2Result) { "$it <> $part2Result" }
     }
 }
+
