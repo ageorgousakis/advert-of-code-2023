@@ -8,13 +8,15 @@ fun main() {
 
     fun part1(input: List<String>): Int = input.sumOf { line ->
         val sequences = mutableListOf(line.split(' ').map(String::toInt))
-        while (sequences.last().any() { it != 0 }) sequences += sequences.last().windowed(2).map { (a, b) -> b - a }
+        while (sequences.last().any { it != 0 })
+            sequences += sequences.last().windowed(2).map { (a, b) -> b - a }
         sequences.sumOf { it.last() }
     }
 
     fun part2(input: List<String>): Int = input.sumOf { line ->
         val sequences = mutableListOf(line.split(' ').map(String::toInt))
-        while (sequences.last().any() { it != 0 }) sequences += sequences.last().windowed(2).map { (a, b) -> b - a }
+        while (sequences.last().any { it != 0 })
+            sequences += sequences.last().windowed(2).map { (a, b) -> b - a }
         sequences.map { it.first() }.reversed().reduce { acc, i -> i - acc }
     }
 
@@ -26,7 +28,7 @@ fun main() {
     }
     part2(testInput).also {
         if (showTestResult) it.println()
-        check(it == testPart2Result)  { "$it <> $testPart2Result" }
+        check(it == testPart2Result) { "$it <> $testPart2Result" }
     }
 
     val input = readInput("Day$day")
