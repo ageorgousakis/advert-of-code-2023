@@ -10,9 +10,8 @@ fun main() {
     val testPart1Result2 = 6
     val testPart2Result: BigInteger = BigInteger.valueOf(6)
     val part1Result = 16043
-    val part2Result: BigInteger = BigInteger.ZERO
-    val showTestResult = true
-
+    val part2Result: BigInteger = BigInteger.valueOf(15726453850399)
+    val showTestResult = false
 
     val lineRegex = """(\w{3}) = \((\w{3}), (\w{3})\)""".toRegex()
 
@@ -27,7 +26,7 @@ fun main() {
         return Network(directions, nodes)
     }
 
-    fun stepsToEnd(start: String, directions: List<Char>, nodes: Tree): Int {
+    fun stepsToEnd(start: String, directions: List<Char>, nodes: Tree, endPredicate: (String) -> Boolean): Int {
         var currentNode = start
         var steps = 0
         while (true) {
@@ -37,7 +36,7 @@ fun main() {
                 else
                     nodes[currentNode]!!.second
                 steps++
-                if (currentNode.endsWith("Z"))
+                if (endPredicate.invoke(currentNode))
                     return steps
             }
         }
@@ -45,26 +44,31 @@ fun main() {
 
     fun part1(input: List<String>): Int {
         val network = parseInput(input)
-        var currentNode = "AAA"
-        var directionIndex = 0
-        var steps = 0
-        while (currentNode != "ZZZ") {
-            val direction = network.directions[directionIndex]
-            currentNode = if (direction == 'L')
-                network.nodes[currentNode]!!.first
-            else
-                network.nodes[currentNode]!!.second
-            steps++
-            directionIndex = if (directionIndex + 1 >= network.directions.size) 0 else directionIndex + 1
+        val steps = stepsToEnd("AAA", network.directions, network.nodes) {
+            it == "ZZZ"
         }
+//        var currentNode = "AAA"
+//        var directionIndex = 0
+//        var steps = 0
+//        while (currentNode != "ZZZ") {
+//            val direction = network.directions[directionIndex]
+//            currentNode = if (direction == 'L')
+//                network.nodes[currentNode]!!.first
+//            else
+//                network.nodes[currentNode]!!.second
+//            steps++
+//            directionIndex = if (directionIndex + 1 >= network.directions.size) 0 else directionIndex + 1
+//        }
         return steps
     }
 
     fun part2(input: List<String>): BigInteger {
         val network = parseInput(input)
-        var currentNodes = network.nodes.keys.filter { it.endsWith("A") }
-        val stepsToEnd = currentNodes.map {
-            stepsToEnd(it, network.directions, network.nodes)
+        val startNodes = network.nodes.keys.filter { it.endsWith("A") }
+        val stepsToEnd = startNodes.map {
+            stepsToEnd(it, network.directions, network.nodes) {
+                it.endsWith("Z")
+            }
         }
         val lcm = stepsToEnd.map { BigInteger.valueOf(it.toLong()) }.reduce { acc, i ->
             acc * i / acc.gcd(i)
