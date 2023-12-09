@@ -3,8 +3,8 @@ fun main() {
     val testPart1Result = 114
     val testPart2Result = 2
     val part1Result = 1584748274
-    val part2Result = 0
-    val showTestResult = true
+    val part2Result = 1026
+    val showTestResult = false
 
     fun part1(input: List<String>): Int = input.sumOf { line ->
         val sequences = mutableListOf(line.split(' ').map(String::toInt))
