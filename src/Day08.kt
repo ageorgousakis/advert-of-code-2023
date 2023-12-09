@@ -47,26 +47,14 @@ fun main() {
         val steps = stepsToEnd("AAA", network.directions, network.nodes) {
             it == "ZZZ"
         }
-//        var currentNode = "AAA"
-//        var directionIndex = 0
-//        var steps = 0
-//        while (currentNode != "ZZZ") {
-//            val direction = network.directions[directionIndex]
-//            currentNode = if (direction == 'L')
-//                network.nodes[currentNode]!!.first
-//            else
-//                network.nodes[currentNode]!!.second
-//            steps++
-//            directionIndex = if (directionIndex + 1 >= network.directions.size) 0 else directionIndex + 1
-//        }
         return steps
     }
 
     fun part2(input: List<String>): BigInteger {
         val network = parseInput(input)
         val startNodes = network.nodes.keys.filter { it.endsWith("A") }
-        val stepsToEnd = startNodes.map {
-            stepsToEnd(it, network.directions, network.nodes) {
+        val stepsToEnd = startNodes.map { startNode ->
+            stepsToEnd(startNode, network.directions, network.nodes) {
                 it.endsWith("Z")
             }
         }
