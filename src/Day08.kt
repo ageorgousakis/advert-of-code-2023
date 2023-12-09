@@ -4,6 +4,7 @@ typealias Node = Pair<String, String>
 typealias Tree = Map<String, Node>
 
 data class Network(val directions: List<Char>, val nodes: Tree)
+
 fun main() {
     val day = "08"
     val testPart1Result = 2
