@@ -18,7 +18,7 @@ fun main() {
 
     fun parseInput(input: List<String>): Network {
         val directions = input[0].toList()
-        val nodes = mutableMapOf<String, Pair<String, String>>()
+        val nodes = mutableMapOf<String, Node>()
 
         input.drop(2).map { line ->
             val (startNode, leftNode, rightNode) = lineRegex.matchEntire(line)?.destructured ?: error("Invalid line $line input!")
