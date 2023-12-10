@@ -90,7 +90,7 @@ fun main() {
     val testPart1Result = 8
     val testPart2Result = 1
     val part1Result = 6927
-    val part2Result = 0
+    val part2Result = 467
     val showTestResult = true
 
     val START_PIPE = EnumSet.allOf(Compass::class.java)
