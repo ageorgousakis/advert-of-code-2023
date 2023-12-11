@@ -17,9 +17,11 @@ fun main() {
     fun GalaxyPoint.distance(other: GalaxyPoint) =
         abs(other.x - x) + abs(other.y - y)
 
-    fun Iterable<GalaxyPoint>.sumOfDistances() =
+    fun Iterable<GalaxyPoint>.pairs() =
         flatMap { a -> map { b -> a to b } }
-            .sumOf { (a, b) -> a.distance(b) } / 2
+
+    fun Iterable<GalaxyPoint>.sumOfDistances() =
+        pairs().sumOf { (a, b) -> a.distance(b) }
 
     fun parseInput(input: List<String>, magnitude: Long): List<GalaxyPoint> {
         val rowsToExpand = input.indices.filter { y -> '#' !in input[y] }
@@ -36,10 +38,10 @@ fun main() {
     }
 
     fun part1(input: List<String>): Long =
-        parseInput(input, 2).sumOfDistances()
+        parseInput(input, 2).sumOfDistances() / 2
 
     fun part2(input: List<String>, magnitude: Long): Long =
-        parseInput(input, magnitude).sumOfDistances()
+        parseInput(input, magnitude).sumOfDistances() / 2
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day${day}_test")
