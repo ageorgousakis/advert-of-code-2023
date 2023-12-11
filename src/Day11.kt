@@ -1,10 +1,10 @@
 import kotlin.math.abs
 
-
-typealias GalaxyPoint = Pair<Long, Long>
-
-val GalaxyPoint.x get() = first
-val GalaxyPoint.y get() = second
+//typealias GalaxyPoint = Pair<Long, Long>
+//
+//val GalaxyPoint.x get() = first
+//val GalaxyPoint.y get() = second
+data class  GalaxyPoint(val x: Long, val y: Long)
 
 fun main() {
     val day = "11"
@@ -17,7 +17,7 @@ fun main() {
     fun GalaxyPoint.distance(other: GalaxyPoint) =
         abs(other.x - x) + abs(other.y - y)
 
-    fun Iterable<GalaxyPoint>.distances() =
+    fun Iterable<GalaxyPoint>.sumOfDistances() =
         flatMap { a -> map { b -> a to b } }
             .sumOf { (a, b) -> a.distance(b) } / 2
 
@@ -36,10 +36,10 @@ fun main() {
     }
 
     fun part1(input: List<String>): Long =
-        parseInput(input, 2).distances()
+        parseInput(input, 2).sumOfDistances()
 
     fun part2(input: List<String>, magnitude: Long): Long =
-        parseInput(input, magnitude).distances()
+        parseInput(input, magnitude).sumOfDistances()
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day${day}_test")
