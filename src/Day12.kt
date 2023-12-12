@@ -93,7 +93,7 @@ data class HotSprings(val springs: String, val damagedGroups: List<Int>) {
 
     private fun calculateCombinations(springIndex: Int, groupIndex: Int, remainingUnknown: Int): Long {
         if (springIndex >= springs.length) return if (remainingUnknown <= 0 && groupIndex == damagedGroups.size) 1 else 0
-        return when (val next = springs[springIndex]) {
+        return when (val spring = springs[springIndex]) {
             CONDITION_OPERATIONAL -> {
                 if (remainingUnknown <= 0)
                     combinations(springIndex + 1, groupIndex, -1)
@@ -123,7 +123,7 @@ data class HotSprings(val springs: String, val damagedGroups: List<Int>) {
             }
 
             else -> {
-                error("Invalid spring: $next")
+                error("Invalid spring: $spring")
             }
         }
     }
