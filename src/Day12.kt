@@ -80,19 +80,18 @@ fun main() {
 }
 
 data class HotSprings(val springs: String, val damagedGroups: List<Int>) {
+    private val numberOfDamaged = damagedGroups.size
+    private val numberOfSprings = springs.length
     private val cache = mutableMapOf<Triple<Int, Int, Int>, Long>()
 
     fun combinations(springIndex: Int, groupIndex: Int, remainingUnknown: Int): Long =
         cache.getOrPut(Triple(springIndex, groupIndex, remainingUnknown)) {
-            calculateCombinations(
-                springIndex,
-                groupIndex,
-                remainingUnknown
-            )
+            calculateCombinations(springIndex, groupIndex, remainingUnknown)
         }
 
     private fun calculateCombinations(springIndex: Int, groupIndex: Int, remainingUnknown: Int): Long {
-        if (springIndex >= springs.length) return if (remainingUnknown <= 0 && groupIndex == damagedGroups.size) 1 else 0
+        if (springIndex >= numberOfSprings)
+            return if (remainingUnknown <= 0 && groupIndex == numberOfDamaged) 1 else 0
         return when (val spring = springs[springIndex]) {
             CONDITION_OPERATIONAL -> {
                 if (remainingUnknown <= 0)
@@ -102,16 +101,18 @@ data class HotSprings(val springs: String, val damagedGroups: List<Int>) {
 
             CONDITION_DAMAGED -> when {
                 remainingUnknown < 0 ->
-                    if (groupIndex >= damagedGroups.size) 0
+                    if (groupIndex >= numberOfDamaged) 0
                     else combinations(springIndex + 1, groupIndex + 1, damagedGroups[groupIndex] - 1)
 
-                remainingUnknown == 0 -> 0
-                else -> combinations(springIndex + 1, groupIndex, remainingUnknown - 1)
+                remainingUnknown == 0 ->
+                    0
+                else ->
+                    combinations(springIndex + 1, groupIndex, remainingUnknown - 1)
             }
 
             CONDITION_UNKNOWN -> when {
                 remainingUnknown < 0 ->
-                    (if (groupIndex >= damagedGroups.size) 0
+                    (if (groupIndex >= numberOfDamaged) 0
                     else combinations(springIndex + 1, groupIndex + 1, damagedGroups[groupIndex] - 1)) +
                             combinations(springIndex + 1, groupIndex, -1)
 
